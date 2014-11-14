@@ -14,6 +14,14 @@ Searches for elements in the current document that match the given paramters.
 The arguments are passed through to the [`:bem()`](#bem) selector.
 For more information, see the [`:bem()`](#bem) selector.
 
+Escaping the modifiers, elements or blocks isn't necessary since the only character
+that is not allowed inside if the parantheses following `:bem` is the closing
+bracket (`)`).  
+Another character with a special meaning inside the parantheses is the comma (`,`).
+But unlike the closing bracket, it's up the author of a plugin how to handle
+that character. Using that character as part of an identifier by escaping it using
+a backslash (i.e. `"\\"`) is not supported yet but may be added in a future version.
+
 ###jQuery.bem.config()
 
 `void $.bem.config( object options )`  
