@@ -2,7 +2,7 @@
 
 A jQuery Plugin that makes working with BEM data attributes (aka. [data-bem](https://github.com/futape/data-bem)) a joy.
 
-Not tested yet. Feel free to download `jquery.data-bem.js` and test the plugin.
+Not tested yet. Feel free to download [`jquery.data-bem.js`](https://github.com/futape/jquery-data-bem/blob/master/jquery.data-bem.js) and test the plugin.
 
 ##API
 
@@ -11,8 +11,8 @@ Not tested yet. Feel free to download `jquery.data-bem.js` and test the plugin.
 `jquery $.bem( string blockOrElement [, string modifiers [, string alternateModifiers [, ...]]] )`
 
 Searches for elements in the current document that match the given paramters.  
-The arguments are passed through to the `:bem()` selector.
-For more information, see the `:bem()` selector.
+The arguments are passed through to the [`:bem()`](#bem) selector.
+For more information, see the [`:bem()`](#bem) selector.
 
 ###jQuery.bem.config()
 
@@ -68,15 +68,15 @@ whitespace characters.
 
 `toggleBem( string blockOrElement [, string modifiers] )`
 
-This function combines `addBem()` and `removeBem()` and
+This function combines [`addBem()`](#addbem) and [`removeBem()`](#removebem) and
 adds or removes BEM attributes depending on their current
 presence or absence.  
-For more information see, `addBem()` and `removeBem()`.
+For more information see, [`addBem()`](#addbem) and [`removeBem()`](#removebem).
 
 ###:bem()
 
 `:bem( string blockOrElement [, string modifiers [, string alternateModifiers [, ...]]] )`
 
 This selector matches the given elements against the given parameters.  
-The arguments are passed through to the `hasBem()` method.
+The arguments are passed through to the [`hasBem()`](#hasbem) method.
 For more information, see the that function.
