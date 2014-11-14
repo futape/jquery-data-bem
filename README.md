@@ -88,5 +88,3 @@ For more information, see the that function.
 ##License
 
 This plugin is available under the MIT license.
-
-The [CSS.escape polyfill](https://mths.be/cssescape) by Mathias Bynens is licensed unter the MIT license.
