@@ -1,37 +1,79 @@
 (function($){
     var settings={
+            /**
+             * If set to `true`, also classes are used when searching for
+             * BEM elements or altering their BEM attributes.
+             */
             "useClass":true,
+            
+            /**
+             * The delimiter that separates the modifier from the element/block.
+             *
+             *     block__element--modifier
+             *                   __
+             *        delimiter -´
+             */
             "modDelim":"--",
-            "attrPrefix":"bem-" // => data-bem-module
+            
+            /**
+             * A term that prefixes the element or block identifier in a
+             * BEM `data-*` attribute name.
+             * `bem-` for example would result in `data-bem-element`.
+             */
+            "attrPrefix":"bem-"
         },
         jq_helper=$('<div />'),
+        
+        // string fn_escRegex( string aString [, string regExDelimiter] )
         fn_escRegex=function(str_a, str_delim){
-            return str_a.replace(new RegExp("[\.\\+*?\[^\]$(){}=!<>|:"+(str_delim!=null ? str_delim : "")+"-]", "g"), "\\$&");
+            return str_a.replace(new RegExp("[\.\\+*?\[^\]$(){}=!<>|:"+(str_delim!=null ? fn_escRegex(str_delim) : "")+"-]", "g"), "\\$&");
         },
+        
+        // string fn_escSelector( string selector )
         fn_escSelector=function(str_selector){
             return str_selector.replace(new RegExp("["+fn_escapeRegex("!\"#$%&'()*+,./:;<=>?@[\\]^`{|}~")+"]", "g"), "\\$&");
         },
+        
+        // string fn_getAttr( string blockOrElement )
         fn_getAttr=function(str_el){
             return "data-"+settings.attrPrefix+str_el;
         },
+        
+        // string fn_prepareMod( string modifiers )
         fn_prepareMod=function(str_mod){
             str_mod=str_mod!=null ? $.trim(str_mod).replace(/\s+/g, " ") : str_mod;
             str_mod=str_mod==="" ? null : str_mod;
             
             return str_mod;
         },
+        
+        // string fn_getModPrefix( string blockOrElement )
         fn_getModPrefix=function(str_el){
             return str_el+settings.modDelim;
         };
     
+    /**
+     * jquery $.bem( string blockOrElement [, string modifiers [, string alternateModifiers [, ...]]] )
+     *
+     * Searches for elements in the current document that match the given paramters.
+     * The arguments are passed through to the `:bem()` selector.
+     * For more information, see the `:bem()` selector.
+     */
     $.bem=function(str_el, str_mod){
         var arr_mods=$.makeArray(arguments).slice(1);
         
         return $(":bem("+fn_escSelector(str_el)+(arr_mods.length>0 ? ","+$.map(arr_mods, fn_escSelector).join(",") : "")+")");
     };
     
-    // $.bem.config( object options )
-    // $.bem.config( string option )
+    /**
+     * void $.bem.config( object options )
+     * mixed $.bem.config( string option )
+     *
+     * When an object is given, this function changes the settings
+     * according to the options of the given object.
+     * If a string is given, this function returns the value of the
+     * option specified by the string.
+     */
     $.bem.config=function(options){
         if(typeof options!="object"){
             var mix_setting=settings[options];
@@ -46,6 +88,16 @@
         $.extend(settings, $.extend(true, {}, options));
     };
     
+    /**
+     * hasBem( string blockOrElement [, string modifiers [, string alternateModifiers [, ...]]] )
+     *
+     * Checks whether an element matches the given parameters.
+     * A matching element, always contains `blockOrElement`, either as a
+     * `data-*` attribute or as a class (if enabled).
+     * If `modifiers` or `alternateModifiers` are given, only elements that
+     * contain at least one of the modifier sets (separated using whitespace characters)
+     * match the parameters.
+     */
     $.fn.hasBem=function(str_el, str_mod){
         str_mod=fn_prepareMod(str_mod);
         
@@ -85,6 +137,20 @@
         return q_a;
     };
     
+    /**
+     * addBem( string blockOrElement [, string modifiers] )
+     *
+     * Adds the given parameters to the set of matched elements.
+     * If `modifiers` isn't set, only `blockOrElement` is added.
+     * Otherwise, `blockOrElement` as well as the given modifiers
+     * are added to the elements.
+     * If an element already contains a block or element identifier
+     * or a modifier, either as `data-*` attribute or as a class
+     * (if enabled), the block, element or modifier is not added
+     * to that element.
+     * Multiple modifiers can be specified by separating them using
+     * whitespace characters.
+     */
     $.fn.addBem=function(str_el, str_mod){
         str_mod=fn_prepareMod(str_mod);
         
@@ -121,6 +187,19 @@
         });
     };
     
+    /**
+     * removeBem( string blockOrElement [, string modifiers] )
+     *
+     * Removes the given block or element identifier and the given
+     * modifiers from the set of matched elements.
+     * If `modifiers` isn't set, the whole `data-*` attribute
+     * for the given block or element is removed and, if enabled,
+     * all classes matching that identifier are removed.
+     * Otherwise, the `data-*` and the `class` attribute (if enabled)
+     * are altered to remove the specified modifiers only.
+     * Multiple modifiers can be specified by separating them using
+     * whitespace characters.
+     */
     $.fn.removeBem=function(str_el, str_mod){
         str_mod=fn_prepareMod(str_mod);
         
@@ -154,6 +233,14 @@
         return this;
     };
     
+    /**
+     * toggleBem( string blockOrElement [, string modifiers] )
+     *
+     * This function combines `addBem()` and `removeBem()` and
+     * adds or removes BEM attributes depending on their current
+     * presence or absence.
+     * For more information see, `addBem()` and `removeBem()`.
+     */
     $.fn.toggleBem=function(str_el, str_mod){
         str_mod=fn_prepareMod(str_mod);
         
@@ -171,12 +258,18 @@
         });
     };
     
-    // :bem( blockOrElement [, modifier [, ...]] )
+    /**
+     * :bem( string blockOrElement [, string modifiers [, string alternateModifiers [, ...]]] )
+     *
+     * This selector matches the given elements against the given parameters.
+     * The arguments are passed through to the `hasBem()` method.
+     * For more information, see the that function.
+     */
     // seen in jquery source as `function(elem, i, match, array)`,
     // but most often only as `function(elem)`.
     $.expr[":"].bem=function(el_a, i, arr_match){
         /*
-        arr_match: result of String.prototype.match
+        arr_match: result of String.prototype.match()
         [
             ":bem( 1, 2, 3 )",
             "bem",
