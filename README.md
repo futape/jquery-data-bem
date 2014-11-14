@@ -80,3 +80,13 @@ For more information see, [`addBem()`](#addbem) and [`removeBem()`](#removebem).
 This selector matches the given elements against the given parameters.  
 The arguments are passed through to the [`hasBem()`](#hasbem) method.
 For more information, see the that function.
+
+##Author
+
+[Lucas Krause](http://futape.de) ([@futape](https://twitter.com/futape))
+
+##License
+
+This plugin is available under the MIT license.
+
+The [CSS.escape polyfill](https://mths.be/cssescape) by Mathias Bynens is licensed unter the MIT license.
